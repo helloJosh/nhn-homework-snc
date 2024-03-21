@@ -49,41 +49,13 @@ public class Main {
     public static void runServer(int port){
         try(ServerSocket serverSocket = new ServerSocket(port)){
             Socket socket = serverSocket.accept();
-            
-            Thread sendThread = new Thread(()->{
-                try{
-                    BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String line;
-                    while(!(line = input.readLine()).equals("exit")){
-                        System.out.println(line);
-                    }
-                } catch (IOException e) {
-                    System.err.println("Socket Error "+e.getMessage());
-                }
-            });
+            SendThread sendThread = new SendThread(socket);
             sendThread.start();
-
-            Thread readThread = new Thread(()->{
-                try{
-                    String line;
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                    while(!(line = reader.readLine()).equals("exit")){
-                        socket.getOutputStream().write(line.getBytes());
-                        socket.getOutputStream().write("\n".getBytes());
-                    }
-                } catch (IOException e) {
-                    System.err.println("Socket Error "+e.getMessage());
-                }
-            });
+            
+            ReadThread readThread = new ReadThread(socket);
             readThread.start();
 
             while(!Thread.currentThread().isInterrupted()){
-                // String line;
-                // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                // while(!(line = reader.readLine()).equals("exit")){
-                //     socket.getOutputStream().write(line.getBytes());
-                //     socket.getOutputStream().write("\n".getBytes());
-                // }
             }
         } catch (IOException e){
             System.out.println(e.getMessage());
@@ -91,40 +63,13 @@ public class Main {
     }
     public static void runClient(String s, int port){
         try(Socket socket = new Socket(s, port)){
-            Thread sendThread = new Thread(()->{
-                try{
-                    BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String line;
-                    while(!(line = input.readLine()).equals("exit")){
-                        System.out.println(line);
-                    }
-                } catch (IOException e) {
-                    System.err.println("Socket Error "+e.getMessage());
-                }
-            });
-            sendThread.start();
 
-            Thread readThread = new Thread(()->{
-                try{
-                    String line;
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                    while(!(line = reader.readLine()).equals("exit")){
-                        socket.getOutputStream().write(line.getBytes());
-                        socket.getOutputStream().write("\n".getBytes());
-                    }
-                } catch (IOException e) {
-                    System.err.println("Socket Error "+e.getMessage());
-                }
-            });
+            SendThread sendThread = new SendThread(socket);
+            sendThread.start();
+            ReadThread readThread = new ReadThread(socket);
             readThread.start();
 
             while(!Thread.currentThread().isInterrupted()){
-                // String line;
-                // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                // while(!(line = reader.readLine()).equals("exit")){
-                //     socket.getOutputStream().write(line.getBytes());
-                //     socket.getOutputStream().write("\n".getBytes());
-                // }
             }
         } catch(IOException e){
             System.out.println(e.getMessage());

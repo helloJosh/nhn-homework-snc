@@ -53,7 +53,7 @@ public class Main {
             Thread sendThread = new Thread(()->{
                 try{
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String line = input.readLine();
+                    String line;
                     while(!(line = input.readLine()).equals("exit")){
                         System.out.println(line);
                     }
@@ -62,16 +62,28 @@ public class Main {
                 }
             });
             sendThread.start();
+
             Thread readThread = new Thread(()->{
-                
-            });
-            while(!Thread.currentThread().isInterrupted()){
-                String line;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                while(!(line = reader.readLine()).equals("exit")){
-                    socket.getOutputStream().write(line.getBytes());
-                    socket.getOutputStream().write("\n".getBytes());
+                try{
+                    String line;
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                    while(!(line = reader.readLine()).equals("exit")){
+                        socket.getOutputStream().write(line.getBytes());
+                        socket.getOutputStream().write("\n".getBytes());
+                    }
+                } catch (IOException e) {
+                    System.err.println("Socket Error "+e.getMessage());
                 }
+            });
+            readThread.start();
+
+            while(!Thread.currentThread().isInterrupted()){
+                // String line;
+                // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                // while(!(line = reader.readLine()).equals("exit")){
+                //     socket.getOutputStream().write(line.getBytes());
+                //     socket.getOutputStream().write("\n".getBytes());
+                // }
             }
         } catch (IOException e){
             System.out.println(e.getMessage());
@@ -82,7 +94,7 @@ public class Main {
             Thread sendThread = new Thread(()->{
                 try{
                     BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String line = input.readLine();
+                    String line;
                     while(!(line = input.readLine()).equals("exit")){
                         System.out.println(line);
                     }
@@ -92,13 +104,27 @@ public class Main {
             });
             sendThread.start();
 
-            while(!Thread.currentThread().isInterrupted()){
-                String line;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                while(!(line = reader.readLine()).equals("exit")){
-                    socket.getOutputStream().write(line.getBytes());
-                    socket.getOutputStream().write("\n".getBytes());
+            Thread readThread = new Thread(()->{
+                try{
+                    String line;
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                    while(!(line = reader.readLine()).equals("exit")){
+                        socket.getOutputStream().write(line.getBytes());
+                        socket.getOutputStream().write("\n".getBytes());
+                    }
+                } catch (IOException e) {
+                    System.err.println("Socket Error "+e.getMessage());
                 }
+            });
+            readThread.start();
+
+            while(!Thread.currentThread().isInterrupted()){
+                // String line;
+                // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                // while(!(line = reader.readLine()).equals("exit")){
+                //     socket.getOutputStream().write(line.getBytes());
+                //     socket.getOutputStream().write("\n".getBytes());
+                // }
             }
         } catch(IOException e){
             System.out.println(e.getMessage());
